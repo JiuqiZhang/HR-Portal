@@ -5,5 +5,3 @@ Creating a portal website for managing the new employee onboarding process.
 onboarding status or housing assignments.
 
 
-frontend folder is for React web app.
-erver folder will be our node.js server.
