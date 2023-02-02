@@ -94,7 +94,7 @@ export default function Navbar(props) {
     );
   }
   return (
-    <Drawer variant="permanent">
+    <Drawer variant="permanent" PaperProps={{ style: { width: 303 } }}>
       <List disablePadding sx={{ bgcolor: "#0B1929", minHeight: "100vh" }}>
         <ListItem sx={{ ...itemCategory, fontSize: "5vh", color: "white" }}>
           Beaconfire
