@@ -6,6 +6,7 @@ const schema = mongoose.Schema({
     creater: { type: String, required: true },
     timestamp: { type: String, required: true},
     status: { type: String, required: true },
+    comment:[{content:{type: String}, sender:{type: String}}]
 })
 
 module.exports = mongoose.model("Report", schema)

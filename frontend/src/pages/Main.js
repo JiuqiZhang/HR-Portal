@@ -17,7 +17,7 @@ function Copyright() {
       <Link color="inherit" href="https://github.com/JiuqiZhang/HR-Portal">
         Your Website
       </Link>
-      {new Date().getFullYear()}.
+      {' 2023'}.
     </Typography>
   );
 }
