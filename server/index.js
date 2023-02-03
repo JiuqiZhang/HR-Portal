@@ -11,6 +11,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+const EmployeeHousingRouter = require('./routes/EmployeeHousingRouter');
+app.use("/employee_housing", EmployeeHousingRouter);
+
 app.set("view engine", "ejs")
 
 

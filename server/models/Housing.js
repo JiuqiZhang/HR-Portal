@@ -1,4 +1,6 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const refType = Schema.Types.ObjectId;
 
 const schema = mongoose.Schema({
     address: { type:String, required: true },
