@@ -12,7 +12,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 const EmployeeHousingRouter = require('./routes/EmployeeHousingRouter');
+const EmployeeProfileRouter = require('./routes/EmployeeProfileRouter');
 app.use("/employee_housing", EmployeeHousingRouter);
+app.use("/employee_profile", EmployeeProfileRouter);
 
 app.set("view engine", "ejs")
 
