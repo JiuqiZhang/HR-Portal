@@ -33,8 +33,7 @@ exports.post_report = async (req, res) => {
 // reportId "63dc357e44007c73daac419c" employee_housing/comment?report_id=63dc357e44007c73daac419c
 exports.get_comment = async (req, res) => {
   try {
-    const reportId = req.query.report_id; 
-    // console.log(reportId);
+    const reportId = req.query.report_id;
     const report = await Report.find({ _id: reportId });
     const comment = report.comment;
     res.json(comment);
