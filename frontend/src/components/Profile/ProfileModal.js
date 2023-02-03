@@ -70,8 +70,8 @@ export default function ProfileModal() {
             }}
           >
             <Stack spacing={1}>
-              {employeeInfo.map((value) => (
-                <FormControl>
+              {employeeInfo.map((value, index) => (
+                <FormControl key={"value-"+index}>
                   <FormLabel>{value}</FormLabel>
                   <TextField
                     autoFocus
