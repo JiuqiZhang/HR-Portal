@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
-import Typography from '@mui/material/Typography';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { FormControl, FormLabel } from '@mui/material';
+import API from '../../api';
 
-export default function CommentModal() {
-  const [open, setOpen] = React.useState(false);
+export default function CommentModal({ reportId, creater }) {
+  const [open, setOpen] = useState(false);
+  const [description, setDescription] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -20,20 +22,34 @@ export default function CommentModal() {
     setOpen(false);
   };
 
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    API.post(`/employee_housing/comment?report_id=${reportId}`, {
+      content: description,
+      creator: creater
+    })
+      .then(res => {
+        setDescription(res.data);
+        setOpen(false);
+      })
+  }
+
+  const handleChange = (event) => {
+    if (event.target.name === 'description') {
+      setDescription(event.target.value);
+    }
+  };
+
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        View
+      <Button variant="outlined" onClick={handleClickOpen} style={{ marginBottom: 20 }}>
+        Post new comment
       </Button>
       <Dialog fullWidth maxWidth='md' open={open} onClose={handleClose}>
         <DialogTitle>Share your thoughts</DialogTitle>
         <DialogContent>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              setOpen(false);
-            }}
-          >
+          <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Comment</FormLabel>
@@ -45,6 +61,8 @@ export default function CommentModal() {
                   variant="outlined"
                   multiline
                   rows={6}
+                  name="description"
+                  onChange={handleChange}
                 />
               </FormControl>
               <DialogActions>
@@ -53,12 +71,6 @@ export default function CommentModal() {
               </DialogActions>
             </Stack>
           </form>
-          <Typography variant="subtitle1" component="div">
-            All Comments
-          </Typography>
-          <Typography variant="subtitle1" component="div">
-            This is a comment - Posted by Jane
-          </Typography>
         </DialogContent>
       </Dialog>
     </div>
