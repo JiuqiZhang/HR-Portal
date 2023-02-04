@@ -7,9 +7,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
 import { FormControl, FormLabel } from '@mui/material';
+import API from '../../api';
 
-export default function EditReportModal() {
+export default function NewReportModal() {
   const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,20 +22,38 @@ export default function EditReportModal() {
     setOpen(false);
   };
 
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    API.post(`/employee_housing/report`, {
+      title: title,
+      description: description
+    })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+        setOpen(false);
+      })
+  }
+
+  const handleChange = (event) => {
+    if (event.target.name === 'title') {
+      setTitle(event.target.value);
+    }
+    if (event.target.name === 'description') {
+      setDescription(event.target.value);
+    }
+  };
+
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Edit
+        Create new facility report
       </Button>
       <Dialog fullWidth maxWidth='md' open={open} onClose={handleClose}>
-        <DialogTitle>Edit report</DialogTitle>
+        <DialogTitle>Create new facility report</DialogTitle>
         <DialogContent>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              setOpen(false);
-            }}
-          >
+          <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
               <FormControl>
                 <FormLabel>Title</FormLabel>
@@ -42,6 +63,8 @@ export default function EditReportModal() {
                   id="name"
                   fullWidth
                   variant="outlined"
+                  onChange={handleChange}
+                  name="title"
                 />
               </FormControl>
               <FormControl>
@@ -54,6 +77,8 @@ export default function EditReportModal() {
                   variant="outlined"
                   multiline
                   rows={6}
+                  onChange={handleChange}
+                  name="description"
                 />
               </FormControl>
               <DialogActions>

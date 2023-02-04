@@ -5,11 +5,13 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
 import { FormControl, FormLabel } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import API from '../../api';
 
-export default function NewReportModal() {
+export default function EditCommendModal({commentId, creater}) {
   const [open, setOpen] = React.useState(false);
+  const [description, setDescription] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,31 +21,34 @@ export default function NewReportModal() {
     setOpen(false);
   };
 
+  const handleSubmit = event => {
+    event.preventDefault();
+    API.put(`/employee_housing/comment?comment_id=${commentId}`, {
+      content: description,
+      creator: creater
+    })
+      .then(res => {
+        setDescription(res.data);
+        setOpen(false);
+      })
+  }
+
+  const handleChange = (event) => {
+    if (event.target.name === 'description') {
+      setDescription(event.target.value);
+    }
+  };
+
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Create new facility report
+        Edit
       </Button>
       <Dialog fullWidth maxWidth='md' open={open} onClose={handleClose}>
-        <DialogTitle>Create new facility report</DialogTitle>
+        <DialogTitle>Edit comment</DialogTitle>
         <DialogContent>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              setOpen(false);
-            }}
-          >
+          <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
-              <FormControl>
-                <FormLabel>Name</FormLabel>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="name"
-                  fullWidth
-                  variant="outlined"
-                />
-              </FormControl>
               <FormControl>
                 <FormLabel>Description</FormLabel>
                 <TextField
@@ -54,6 +59,8 @@ export default function NewReportModal() {
                   variant="outlined"
                   multiline
                   rows={6}
+                  name="description"
+                  onChange={handleChange}
                 />
               </FormControl>
               <DialogActions>
