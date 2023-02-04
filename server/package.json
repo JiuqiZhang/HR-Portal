@@ -6,12 +6,12 @@
   "scripts": {
     "start": "nodemon",
     "seed": "node config/seed"
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1309.0",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
