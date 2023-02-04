@@ -5,9 +5,9 @@ const refType = Schema.Types.ObjectId;
 const schema = mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    creater: { type: String, required: true },
+    creater: { type: String },
     timestamp: { type: String, required: true},
-    status: { type: String, required: true },
+    status: { type: String },
     comment:[{ type: refType, ref: "Comment" }]
 })
 
