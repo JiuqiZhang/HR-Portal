@@ -17,7 +17,7 @@ exports.signIn = async (req, res) => {
         return res.status(403).send("Incorrect Password") 
       }
         
-      res.send({name:user.firstName + user.lastName, email:user.email});
+      res.send({name:user.firstName + " " + user.lastName, email:user.email});
      
 
     } catch (e) {

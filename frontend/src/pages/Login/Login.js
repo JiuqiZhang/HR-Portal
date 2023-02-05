@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import API from '../../api';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -28,7 +29,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+       {children}
         </Box>
       )}
     </div>
@@ -62,6 +63,26 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+  const [token, setToken] = React.useState("")
+  const handleSubmitHR = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const info ={
+      email: data.get("email"),
+      password: data.get("password"),
+    }
+    console.log(info);
+    API.post(`hr/signIn`, info)
+      .then((response) => {
+        // console.log(response);
+        alert("Welcome, " + response.data.name)
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -113,12 +134,6 @@ export default function Login() {
               Sign in
             </Typography>
 
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -127,7 +142,17 @@ export default function Login() {
                 <Tab label="HR" />
                 <Tab label="Employee" />
               </Tabs>
+
+
+              {/* HR Panel */}
               <TabPanel value={value} index={0}>
+
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmitHR}
+              sx={{ mt: 1 }}
+            >
                 <TextField
                   margin="normal"
                   required
@@ -137,6 +162,8 @@ export default function Login() {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  value = {email}
+                  onChange={(e)=>{setEmail(e.target.value)}}
                 />
                 <TextField
                   margin="normal"
@@ -147,6 +174,8 @@ export default function Login() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  value = {password}
+                  onChange={(e)=>{setPassword(e.target.value)}}
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
@@ -157,11 +186,20 @@ export default function Login() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                 
                 >
                   Sign In
                 </Button>
+                </Box>
               </TabPanel>
               <TabPanel value={value} index={1}>
+
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
                   margin="normal"
                   required
@@ -202,11 +240,12 @@ export default function Login() {
                 >
                   Sign In
                 </Button>
+                </Box>
               </TabPanel>
 
              
               <Copyright sx={{ mt: 5 }} />
-            </Box>
+
           </Box>
         </Grid>
       </Grid>
