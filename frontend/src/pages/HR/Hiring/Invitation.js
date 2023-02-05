@@ -9,7 +9,8 @@ import {
   TableHead,
   TableBody,
 } from "@mui/material";
-import React from "react";
+import React,{useRef} from "react";
+import emailjs from '@emailjs/browser';
 
 export default function Registration() {
   const [email, setEmail] = React.useState("");
@@ -19,8 +20,19 @@ export default function Registration() {
     { name: "Jn", email: "Jn@bf.com", status: "registered" },
     { name: "Cena", email: "cena@bf.com", status: "registered" },
   ]);
+  const form = useRef();
+  const sendEmail = () => {
+
+    emailjs.send('registration_token', 'template_prk74qi', {from_name:'Vicky', to_name:name, email:email, message:'123123'}, 'l00MFqEaS-lC5OS2A')
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      });
+  };
 
   function sendToken() {
+    sendEmail();
     if (name && email) {
       setRows((oldArray) => [
         { name: name, email: email, status: "pending" },
@@ -32,6 +44,7 @@ export default function Registration() {
       setName("");
     }
   }
+  
   return (
     <Box
       sx={{

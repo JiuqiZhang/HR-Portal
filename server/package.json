@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon",
     "seed": "node config/seed"
-
   },
   "keywords": [],
   "author": "",

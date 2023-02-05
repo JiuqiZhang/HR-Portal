@@ -13,9 +13,10 @@ app.use(bodyParser.json())
 
 const EmployeeHousingRouter = require('./routes/EmployeeHousingRouter');
 const EmployeeProfileRouter = require('./routes/EmployeeProfileRouter');
+const HRRouter = require('./routes/HRRouter')
 app.use("/employee_housing", EmployeeHousingRouter);
 app.use("/employee_profile", EmployeeProfileRouter);
-
+app.use('/hr', HRRouter);
 app.set("view engine", "ejs")
 
 
