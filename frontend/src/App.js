@@ -3,7 +3,7 @@ import Login from "./pages/Login/Login";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Main from "./pages/Main";
 
-export default function App() {
+function App() {
   // const loggedIn = false;
   return (
     <div className="App">
@@ -22,3 +22,6 @@ export default function App() {
     </div>
   );
 }
+
+export default App;
+

@@ -1,71 +1,52 @@
-import { useState } from "react";
+import { useState } from 'react';
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import TextField from "@mui/material/TextField";
+import API from '../../api';
+import { Button } from '@mui/material';
 
-const filterData = (query, data) => {
-  if (!query) {
-    return data;
-  } else {
-    return data.filter((d) => d.toLowerCase().includes(query));
+export default function ProfileSearch({ setProfile }) {
+  const [searchInput, setSearchInput] = useState([]);
+
+  const handleSubmit = event => {
+    event.preventDefault();
+    API.get(`/employee_profile/search?name=${searchInput}`)
+      .then((res) => {
+        setProfile(res.data)
+      });
   }
-};
 
-const data = [];
+  const handleBack = event => {
+    event.preventDefault();
+    API.get(`/employee_profile`)
+      .then((res) => {
+        setProfile(res.data);
+      });
+  }
 
-const SearchBar = ({ setSearchQuery }) => (
-  <form>
-    <TextField
-      id="search-bar"
-      className="text"
-      onInput={(e) => {
-        setSearchQuery(e.target.value);
-      }}
-      variant="outlined"
-      placeholder="Search..."
-      size="small"
-    />
-    <IconButton type="submit" aria-label="search">
-      <SearchIcon style={{ fill: "blue" }} />
-    </IconButton>
-  </form>
-);
-
-export default function ProfileSearch() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const dataFiltered = filterData(searchQuery, data);
+  const handleChange = (event) => {
+    if (event.target.name === 'description') {
+      setSearchInput(event.target.value);
+    }
+  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignSelf: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        padding: 20
-      }}
-    >
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <div style={{ padding: 3 }}>
-        {dataFiltered.map((data) => (
-          <div
-            className="text"
-            style={{
-              padding: 5,
-              justifyContent: "normal",
-              fontSize: 20,
-              color: "blue",
-              margin: 1,
-              width: "250px",
-              BorderColor: "green",
-              borderWidth: "10px"
-            }}
-            key={data.id}
-          >
-            {data}
-          </div>
-        ))}
-      </div>
-    </div>
+    <>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          id="search-bar"
+          className="text"
+          variant="outlined"
+          placeholder="Search..."
+          size="small"
+          name="description"
+          onChange={handleChange}
+        />
+        <IconButton type="submit" aria-label="search">
+          <SearchIcon />
+        </IconButton>
+        <Button onClick={handleBack}>Back</Button>
+      </form>
+    </>
   );
 }
