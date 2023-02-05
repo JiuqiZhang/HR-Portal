@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Formik, Field, Form } from "formik";
 
 import React from "react";
+import Card from "../../components/Card";
 // import { bgcolor } from "@mui/system";
 // {/* <TableCell>Address</TableCell> */}
 //               <TableCell>Landlord Name</TableCell>
@@ -90,7 +91,11 @@ export default function Housing() {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    var answer = window.confirm("Cancel without saving?");
+if (answer) {
+  setOpen(false);
+}
+    
   };
   function ModalDialog() {
     return (
@@ -154,66 +159,69 @@ export default function Housing() {
                 <Field id="chairs" name="chairs" type="number" />
 
                 <button type="submit">Submit</button>
-                <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose} >Subscribe</Button>
+ 
                </Box>
               </Form>
             </Formik>
           </DialogContent>
           <DialogActions>
-            
+          <Button onClick={handleClose}>Cancel</Button>
           </DialogActions>
         </Dialog>
       </div>
     );
   }
-  return (
-    <Box
-      sx={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "80%",
-      }}
-    >
-      <Button
-        variant="outlined"
-        sx={{ width: "20%", right: 0 }}
-        onClick={handleClickOpen}
-      >
-        Add new Housing
-      </Button>
-      <ModalDialog />
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Address</TableCell>
-              <TableCell>Landlord Name</TableCell>
-              <TableCell>Landlord Email</TableCell>
-              <TableCell>Landlord Number</TableCell>
-              <TableCell>Residents</TableCell>
-              <TableCell>Summary</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell>{row.address}</TableCell>
-                <TableCell>{row.landlord.name}</TableCell>
-                <TableCell>{row.landlord.email}</TableCell>
-                <TableCell>{row.landlord.landlordNumber}</TableCell>
-                <TableCell>{row.residents}</TableCell>
-                <TableCell>123</TableCell>
+  function Content(){
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "80%",
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{ width: "20%", right: 0, m:2 }}
+          onClick={handleClickOpen}
+        >
+          New Housing
+        </Button>
+        <ModalDialog />
+  
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Address</TableCell>
+                <TableCell>Landlord Name</TableCell>
+                <TableCell>Landlord Email</TableCell>
+                <TableCell>Landlord Number</TableCell>
+                <TableCell>Residents</TableCell>
+                <TableCell>Summary</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  );
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>{row.address}</TableCell>
+                  <TableCell>{row.landlord.name}</TableCell>
+                  <TableCell>{row.landlord.email}</TableCell>
+                  <TableCell>{row.landlord.landlordNumber}</TableCell>
+                  <TableCell>{row.residents}</TableCell>
+                  <TableCell>123</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    );
+  }
+  return (<Card content={<Content />}/>)
 }

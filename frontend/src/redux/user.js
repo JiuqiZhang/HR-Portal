@@ -5,8 +5,8 @@ export const userSlice = createSlice({
   initialState: {
     value: 0,
     loggedIn: false,
-    name: null,
-    email: null,
+    name: '',
+    email: '',
     identity: null,
   },
   reducers: {
@@ -15,10 +15,9 @@ export const userSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      const {name, email} = action.payload
       state.loggedIn = true;
-      state.name = name;
-      state.email = email;
+      state.name += action.payload.name;
+      state.email += action.payload.email;
       state.identity = 'HR'
     },
     logInEmloyee: (state, action) => {
