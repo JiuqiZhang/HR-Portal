@@ -153,9 +153,9 @@ export default function Housing() {
                 <label htmlFor="chairs">Chairs</label>
                 <Field id="chairs" name="chairs" type="number" />
 
-                {/* <button >Submit</button> */}
+                <button type="submit">Submit</button>
                 <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose} type="submit">Subscribe</Button>
+            <Button onClick={handleClose} >Subscribe</Button>
                </Box>
               </Form>
             </Formik>

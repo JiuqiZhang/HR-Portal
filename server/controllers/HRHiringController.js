@@ -18,3 +18,4 @@ exports.generateToken = async (req, res) => {
     });
   }
 };
+
