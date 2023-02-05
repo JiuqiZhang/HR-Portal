@@ -2,7 +2,6 @@ import * as React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
-
 import Navbar from "../components/NavBar";
 import HRContent from "./HR/Content";
 import EmployeeContent from "./Employee/Content";
@@ -10,7 +9,7 @@ import EmployeeContent from "./Employee/Content";
 import Header from "../components/Header";
 
 export default function Main() {
-  const identity = "HR"
+  const identity = "HR";
   const [category, setCategory] = React.useState(
     identity === "HR" ? "Employee Profiles" : "Personal Information"
   );
@@ -18,18 +17,25 @@ export default function Main() {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <CssBaseline />
-        <Box component="nav" >
+        <Box component="nav">
           <Navbar
-            PaperProps={{ style: { width: '30vw' } }}
+            PaperProps={{ style: { width: "30vw" } }}
             identity={identity}
             setCategory={setCategory}
           />
-          
         </Box>
-        <Box sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px`,flex: 1, display: "flex", flexDirection: "column"}}>
-        {/* header */}
+        <Box
+          sx={{
+            width: `calc(100% - ${drawerWidth}px)`,
+            ml: `${drawerWidth}px`,
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* header */}
           <Box component="header">
-            <Header header = {category} />
+            <Header header={category} />
           </Box>
           <Box component="main" sx={{ flex: 1, bgcolor: "#eaeff1", p: 5 }}>
             {identity === "HR" ? (
