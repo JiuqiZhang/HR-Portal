@@ -3,11 +3,6 @@ const Info = require("../models/Info");
 exports.get_all_profiles = async (req, res) => {
   try {
     const employeeInfo = await Info.find();
-    //firstName
-    //lastName
-    //visa
-    //ssn
-    //phoneNum
     res.json(employeeInfo);
   } catch (error) {
     return res.status(401).json({
@@ -16,11 +11,10 @@ exports.get_all_profiles = async (req, res) => {
   }
 }
 
-// infoId 63dcaa7bdd834afdd99865a8    ?info_id=63dcaa7bdd834afdd99865a8
 exports.get_individual_profile = async (req, res) => {
   try {
-    let infoId = req.query.info_id;
-    const individualInfo = await Info.find({ _id: infoId });
+    let profileId = req.query.profile_id;
+    const individualInfo = await Info.find({ _id: profileId });
     res.json(individualInfo);
   } catch (error) {
     return res.status(401).json({

@@ -30,7 +30,7 @@ export default function ViewComment({ reportId, creater }) {
           setComment(res.data);
         }
       });
-  }, []);
+  }, [reportId]);
 
   return (
     <div>
