@@ -10,7 +10,7 @@ exports.generateToken = async (req, res) => {
       }
     );
     console.log(token);
-    res.json({token:token});
+    res.json({token:""+token});
   } catch (error) {
     console.log(error);
     res.status(401).json({
