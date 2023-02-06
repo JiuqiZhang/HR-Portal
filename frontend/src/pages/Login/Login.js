@@ -71,10 +71,7 @@ export default function Login(props) {
   const dispatch = useDispatch()
   const {id} = useParams();
   const handleSubmitALL = (event) => {
-    if (password1!== password){
-      alert("Passwords don't match. Please check.")
-      return
-    }
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const info ={
@@ -100,6 +97,10 @@ export default function Login(props) {
       });
   };
   const handleSubmit = (event) => {
+    if (password1 !== password){
+      alert("Passwords don't match. Please check.")
+      return
+    }
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const info ={
@@ -203,7 +204,7 @@ export default function Login(props) {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  value = {password}
+                  value = {password1}
                   onChange={(e)=>{setPassword1(e.target.value)}}
                 />):null}
                 <FormControlLabel
