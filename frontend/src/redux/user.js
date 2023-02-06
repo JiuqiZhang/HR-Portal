@@ -4,10 +4,10 @@ export const userSlice = createSlice({
   name: "user",
   initialState: {
     value: 0,
-    loggedIn: true,
+    loggedIn: false,
     name: '',
     email: '',
-    identity: 'HR',
+    identity: '',
   },
   reducers: {
     logInHR: (state, action) => {
@@ -21,17 +21,16 @@ export const userSlice = createSlice({
       state.identity = 'HR'
     },
     logInEmloyee: (state, action) => {
-        const {name, email} = action.payload
         state.loggedIn = true;
-        state.name = name;
-        state.email = email;
+        state.name += action.payload.name;
+        state.email += action.payload.email;
         state.identity = 'Employee'
     },
     logOut: (state) => {
       state.loggedIn = false;
-      state.name = null;
-      state.email = null;
-      state.identity = null;
+      state.name = '';
+      state.email = '';
+      state.identity = '';
     },
   },
 });

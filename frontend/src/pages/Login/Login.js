@@ -13,13 +13,11 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import API from '../../api';
 import { useDispatch,useSelector } from "react-redux";
 import {useParams} from "react-router-dom";
 
-import { logInHR } from "../../redux/user";
+import { logInHR, logInEmloyee } from "../../redux/user";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -69,9 +67,14 @@ const theme = createTheme();
 export default function Login(props) {
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
+  const [password1, setPassword1] = React.useState("")
   const dispatch = useDispatch()
   const {id} = useParams();
-  const handleSubmitHR = (event) => {
+  const handleSubmitALL = (event) => {
+    if (password1!== password){
+      alert("Passwords don't match. Please check.")
+      return
+    }
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const info ={
@@ -79,11 +82,16 @@ export default function Login(props) {
       password: data.get("password"),
     }
     console.log(info);
-    API.post(`hr/signIn`, info)
+    API.post(`/hr/signIn`, info)
       .then((response) => {
         // console.log(response);
         alert("Welcome, " + response.data.name)
-        dispatch(logInHR({name:response.data.name, email:response.data.email}))
+        if (response.data.identity === "HR"){
+          dispatch(logInHR({name:response.data.name, email:response.data.email}))
+        }else{
+          dispatch(logInEmloyee({name:response.data.name, email:response.data.email}))
+        }
+        
         // const name = useSelector(state => state.user.name)
         // console.log(name)
       })
@@ -94,15 +102,23 @@ export default function Login(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const info ={
       email: data.get("email"),
       password: data.get("password"),
-    });
-  };
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+      token:id
+    }
+    console.log(info);
+    API.post(`/employee_profile/signUp`, info)
+      .then((response) => {
+        // console.log(response);
+        alert("Welcome, " + response.data.Name)
+        dispatch(logInEmloyee({name:response.data.Name, email:response.data.email}))
+        // const name = useSelector(state => state.user.name)
+        // console.log(name)
+      })
+      .catch((error) => {
+        alert(error.response.data);
+      });
   };
 
   return (
@@ -142,26 +158,16 @@ export default function Login(props) {
               Beaconfire - Sign in
             </Typography>
             <Typography component="h1" variant="h5">
-{JSON.stringify(id)}
             </Typography>
 
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="HR" />
-                <Tab label="Employee" />
-              </Tabs>
 
 
-              {/* HR Panel */}
-              <TabPanel value={value} index={0}>
+           
 
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmitHR}
+              onSubmit={id?handleSubmit:handleSubmitALL}
               sx={{ mt: 1 }}
             >
                 <TextField
@@ -188,6 +194,18 @@ export default function Login(props) {
                   value = {password}
                   onChange={(e)=>{setPassword(e.target.value)}}
                 />
+                {id?(<TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password1"
+                  label="Re-enter Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value = {password}
+                  onChange={(e)=>{setPassword1(e.target.value)}}
+                />):null}
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"
@@ -202,49 +220,7 @@ export default function Login(props) {
                   Sign In
                 </Button>
                 </Box>
-              </TabPanel>
-              <TabPanel value={value} index={1}>
 
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign In
-                </Button>
-                </Box>
-              </TabPanel>
 
              
               <Copyright sx={{ mt: 5 }} />
