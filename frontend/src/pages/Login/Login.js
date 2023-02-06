@@ -16,6 +16,10 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import API from '../../api';
+import { useDispatch,useSelector } from "react-redux";
+import {useParams} from "react-router-dom";
+
+import { logInHR } from "../../redux/user";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -62,10 +66,11 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function Login() {
+export default function Login(props) {
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
-  const [token, setToken] = React.useState("")
+  const dispatch = useDispatch()
+  const {id} = useParams();
   const handleSubmitHR = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -78,6 +83,9 @@ export default function Login() {
       .then((response) => {
         // console.log(response);
         alert("Welcome, " + response.data.name)
+        dispatch(logInHR({name:response.data.name, email:response.data.email}))
+        // const name = useSelector(state => state.user.name)
+        // console.log(name)
       })
       .catch((error) => {
         alert(error.response.data);
@@ -131,7 +139,10 @@ export default function Login() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Beaconfire - Sign in
+            </Typography>
+            <Typography component="h1" variant="h5">
+{JSON.stringify(id)}
             </Typography>
 
               <Tabs
@@ -219,14 +230,6 @@ export default function Login() {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                />
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="token"
-                  label="Token"
-                  id="token"
                 />
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}

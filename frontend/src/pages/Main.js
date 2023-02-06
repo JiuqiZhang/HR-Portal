@@ -5,11 +5,13 @@ import Box from "@mui/material/Box";
 import Navbar from "../components/NavBar";
 import HRContent from "./HR/Content";
 import EmployeeContent from "./Employee/Content";
+import {useSelector} from 'react-redux'
 
 import Header from "../components/Header";
 
 export default function Main() {
-  const identity = "HR";
+  const identity = useSelector(state => state.user.identity)
+
   const [category, setCategory] = React.useState(
     identity === "HR" ? "Employee Profiles" : "Personal Information"
   );
@@ -20,7 +22,7 @@ export default function Main() {
         <Box component="nav">
           <Navbar
             PaperProps={{ style: { width: "30vw" } }}
-            identity={identity}
+            category={category}
             setCategory={setCategory}
           />
         </Box>

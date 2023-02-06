@@ -13,6 +13,9 @@ import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useSelector,useDispatch } from "react-redux";
+import { logOut } from "../redux/user";
+
 const EmployeeCategories = [
   {
     id: "Pages",
@@ -67,10 +70,21 @@ const itemCategory = {
 };
 
 export default function Navbar(props) {
-  const { identity, setCategory } = props;
-  const handleCategoryChange= (id)=>{
-    setCategory(id)
-  }
+  const { category, setCategory } = props;
+  const dispatch = useDispatch()
+  const handleCategoryChange = (id) => {
+    setCategory(id);
+  };
+  const HRname = useSelector((state) => state.user.name);
+  const identity = useSelector((state) => state.user.identity);
+  const email = useSelector((state) => state.user.email);
+  const [name, setName] = React.useState(HRname);
+// console.log(HRname, identity, email)
+//   React.useEffect(() => {
+//     setName(HRname);
+//     console.log(HRname)
+    
+//   }, [HRname]);
   function navigationChoice() {
     return (
       <div>
@@ -78,8 +92,12 @@ export default function Navbar(props) {
           ({ id, children }) => (
             <Box key={id} sx={{ bgcolor: "#0B1929", pt: 6 }}>
               {children.map(({ id: childId, icon, active }) => (
-                <ListItem disablePadding key={childId} onClick={() => handleCategoryChange(childId)}>
-                  <ListItemButton selected={active} sx={item}>
+                <ListItem
+                  disablePadding
+                  key={childId}
+                  onClick={() => handleCategoryChange(childId)}
+                >
+                  <ListItemButton selected={category===childId ? active=true : active = false} sx={item}>
                     <ListItemIcon sx={{ color: "#B6BBBF" }}>
                       {icon}
                     </ListItemIcon>
@@ -103,11 +121,11 @@ export default function Navbar(props) {
           <ListItemIcon sx={{ color: "#B6BBBF" }}>
             <AccessibilityIcon />
           </ListItemIcon>
-          <ListItemText>Welcome, {"Username"}</ListItemText>
+          <ListItemText>Welcome, {name}</ListItemText>
         </ListItem>
         {navigationChoice()}
-        <ListItem disablePadding sx={{ py: 20 }}>
-          <ListItemButton sx={item}>
+        <ListItem disablePadding sx={{ py: 20 }} onClick={() => dispatch(logOut())}>
+          <ListItemButton sx={item} >
             <ListItemIcon sx={{ color: "#B6BBBF" }}>
               <LogoutIcon />
             </ListItemIcon>

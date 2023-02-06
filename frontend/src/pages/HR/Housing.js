@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
+import API from '../../api';
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Formik, Field, Form } from "formik";
 
 import React from "react";
+import Card from "../../components/Card";
 // import { bgcolor } from "@mui/system";
 // {/* <TableCell>Address</TableCell> */}
 //               <TableCell>Landlord Name</TableCell>
@@ -85,13 +86,31 @@ const rows = [
 
 export default function Housing() {
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState([]);
+  const [refresh, setRefresh] = React.useState(false)
   const handleClickOpen = () => {
     setOpen(true);
+    console.log(data)
+    // setRefresh(!refresh)
   };
 
   const handleClose = () => {
-    setOpen(false);
+    var answer = window.confirm("Cancel without saving?");
+if (answer) {
+  setOpen(false);
+}
   };
+
+  React.useEffect(() => {
+    console.log('refreshing')
+    API.get(`hr/allHousing`)
+    .then(response => setData(response.data))
+    .then(console.log(data))
+    .catch((error) => {
+      alert(error);
+    });
+}, [refresh])
+   
   function ModalDialog() {
     return (
       <div>
@@ -111,8 +130,35 @@ export default function Housing() {
                 chairs: "",
               }}
               onSubmit={async (values) => {
-                await new Promise((r) => setTimeout(r, 500));
-                alert(JSON.stringify(values));
+                // alert(JSON.stringify(values));
+                // const info = {
+                //   address: values.address,
+                //   roommates: [],
+                //   reports: [],
+                //   landlord: {
+                //     name: values.landlordName,
+                //     phoneNum: values.landlordPhone,
+                //     email: values.landlordEmail,
+                //   },
+                //   facility: {
+                //     beds: values.beds,
+                //     tables: values.tables,
+                //     mattresses: values.mattresses,
+                //     chairs: values.chairs,
+                //   },
+                // };
+                // alert(JSON.stringify(values));
+                API.post(`hr/postHousing`, values)
+                  .then((response) => {
+                    console.log(response.data);
+                  })
+                  .then(setRefresh(!refresh))
+                  .then(alert('Sent~'))
+                  .catch((error) => {
+                    alert(error);
+                  });
+                setOpen(false);
+                
               }}
             >
               <Form>
@@ -135,7 +181,7 @@ export default function Housing() {
                 <Field
                   id="landlordPhone"
                   name="landlordPhone"
-                  placeholder="xxx-xxx-xxxx"
+                  placeholder="xxxxxxxxxx"
                 />
                 <label htmlFor="landlordEmail">Landlord Email</label>
                 <Field
@@ -154,66 +200,70 @@ export default function Housing() {
                 <Field id="chairs" name="chairs" type="number" />
 
                 <button type="submit">Submit</button>
-                <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleClose} >Subscribe</Button>
+ 
                </Box>
               </Form>
             </Formik>
           </DialogContent>
           <DialogActions>
-            
+          <Button onClick={handleClose}>Cancel</Button>
           </DialogActions>
         </Dialog>
       </div>
     );
   }
-  return (
-    <Box
-      sx={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "80%",
-      }}
-    >
-      <Button
-        variant="outlined"
-        sx={{ width: "20%", right: 0 }}
-        onClick={handleClickOpen}
-      >
-        Add new Housing
-      </Button>
-      <ModalDialog />
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Address</TableCell>
-              <TableCell>Landlord Name</TableCell>
-              <TableCell>Landlord Email</TableCell>
-              <TableCell>Landlord Number</TableCell>
-              <TableCell>Residents</TableCell>
-              <TableCell>Summary</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell>{row.address}</TableCell>
-                <TableCell>{row.landlord.name}</TableCell>
-                <TableCell>{row.landlord.email}</TableCell>
-                <TableCell>{row.landlord.landlordNumber}</TableCell>
-                <TableCell>{row.residents}</TableCell>
-                <TableCell>123</TableCell>
+  function Content(){
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "80%",
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{ width: "20%", right: 0, m:2 }}
+          onClick={handleClickOpen}
+        >
+          New Housing
+        </Button>
+        <ModalDialog />
+  
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Address</TableCell>
+                <TableCell>Landlord Name</TableCell>
+                <TableCell>Landlord Email</TableCell>
+                <TableCell>Landlord Number</TableCell>
+                <TableCell>Residents</TableCell>
+                <TableCell>Summary</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
-  );
+            </TableHead>
+            <TableBody>
+              {data.map((row, index)=> (
+                <TableRow
+                  key={row._id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                
+                  <TableCell>{row.address}</TableCell>
+                  <TableCell>{row.landlord.name}</TableCell>
+                  <TableCell>{row.landlord.email}</TableCell>
+                  <TableCell>{row.landlord.phoneNum}</TableCell>
+                  <TableCell>{row.residents?(row.residents):0}</TableCell>
+                  <TableCell><Button variant="contained" onClick={()=>{alert(JSON.stringify(row))}}>Summary</Button></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    );
+  }
+  return (<Card content={<Content />}/>)
 }
