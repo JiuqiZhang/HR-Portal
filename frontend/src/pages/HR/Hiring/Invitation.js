@@ -11,10 +11,14 @@ import {
 } from "@mui/material";
 import React,{useRef} from "react";
 import emailjs from '@emailjs/browser';
+import { useSelector,useDispatch } from "react-redux";
+import API from '../../../api';
 
 export default function Registration() {
   const [email, setEmail] = React.useState("");
   const [name, setName] = React.useState("");
+  const HRname = useSelector((state) => state.user.name);
+  const [token, setToken] = React.useState();
   const [rows, setRows] = React.useState([
     { name: "John", email: "John@bf.com", status: null },
     { name: "Jn", email: "Jn@bf.com", status: "registered" },
@@ -23,7 +27,7 @@ export default function Registration() {
   const form = useRef();
   const sendEmail = () => {
 
-    emailjs.send('registration_token', 'template_prk74qi', {from_name:'Vicky', to_name:name, email:email, message:'123123'}, 'l00MFqEaS-lC5OS2A')
+    emailjs.send('registration_token', 'template_prk74qi', {from_name:HRname, to_name:name, email:email, message:'http://localhost:3000/login/'+token}, 'l00MFqEaS-lC5OS2A')
       .then((result) => {
           console.log(result.text);
       }, (error) => {
@@ -32,7 +36,15 @@ export default function Registration() {
   };
 
   function sendToken() {
-    sendEmail();
+    
+    API.post(`hr/generateToken`, {email:email, name:name})
+    .then(response => setToken(response.data.token))
+    .then(console.log(token))
+    .then(() => sendEmail())
+    .catch((error) => {
+      alert(error);
+    });
+    
     if (name && email) {
       setRows((oldArray) => [
         { name: name, email: email, status: "pending" },
