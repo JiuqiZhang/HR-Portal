@@ -30,7 +30,7 @@ exports.signUp = async (req, res) => {
 
     } catch (e) {
       console.error(e);
-      return res.status(401).send("Token expired.")
+      return res.status(401).send("Already registered. Go to 'http://localhost:3000/login' ")
     }
   };
 
